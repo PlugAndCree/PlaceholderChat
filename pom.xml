@@ -1,9 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>it.plugandcree</groupId>
-  <artifactId>placeholderchat</artifactId>
-  <version>0.0.1</version>
-  <name>PlaceholderChat</name>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>it.plugandcree</groupId>
+	<artifactId>placeholderchat</artifactId>
+	<version>0.0.1</version>
+	<name>PlaceholderChat</name>
 	<repositories>
 		<repository>
 			<id>spigot-repo</id>
@@ -12,6 +14,10 @@
 		<repository>
 			<id>tecno-repo</id>
 			<url>http://repo.mrtecno.online/repository/public-maven/</url>
+		</repository>
+		<repository>
+			<id>placeholderapi</id>
+			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
 	</repositories>
 
@@ -26,6 +32,12 @@
 			<groupId>com.spigot.libraries</groupId>
 			<artifactId>spigot-commons</artifactId>
 			<version>1.7.5-f6cd60e</version>
+		</dependency>
+		<dependency>
+			<groupId>me.clip</groupId>
+			<artifactId>placeholderapi</artifactId>
+			<version>2.0.6</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>
