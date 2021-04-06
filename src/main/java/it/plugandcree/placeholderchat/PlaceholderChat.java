@@ -27,6 +27,8 @@ public class PlaceholderChat extends JavaPlugin {
 
 		getServer().getPluginManager().registerEvents(new PlayerChat(), this);
 
+		
+		
 	}
 
 	public void reloadConfig() {
