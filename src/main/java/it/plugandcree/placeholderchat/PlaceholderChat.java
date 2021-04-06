@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import it.plugandcree.placeholderchat.commands.MainCommand;
 import it.plugandcree.placeholderchat.config.ConfigProcessor;
 import it.plugandcree.placeholderchat.config.CustomConfig;
 import it.plugandcree.placeholderchat.events.PlayerChat;
+import net.milkbowl.vault.chat.Chat;
 
 public class PlaceholderChat extends JavaPlugin {
 
@@ -18,16 +20,21 @@ public class PlaceholderChat extends JavaPlugin {
 	private CustomConfig langConfig;
 	private CustomConfig mainConfig;
 	private Map<String, String> formats;
+	private Chat chat = null;
 
 	@Override
 	public void onEnable() {
 		instance = this;
-		
+
 		reloadConfig();
 
 		getServer().getPluginManager().registerEvents(new PlayerChat(), this);
-		
+
 		new MainCommand().register(this);
+
+		if (!setupChat()) {
+			getLogger().severe("VAULT NOT FOUND");
+		}
 	}
 
 	public void reloadConfig() {
@@ -79,5 +86,17 @@ public class PlaceholderChat extends JavaPlugin {
 	public void setFormats(Map<String, String> formats) {
 		this.formats = formats;
 	}
-	
+
+	private boolean setupChat() {
+		if (getServer().getPluginManager().getPlugin("Vault") == null)
+			return false;
+
+		RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
+		chat = rsp.getProvider();
+		return chat != null;
+	}
+
+	public Chat getChat() {
+		return chat;
+	}
 }

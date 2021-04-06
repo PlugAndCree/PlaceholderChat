@@ -38,6 +38,11 @@ public class PlayerChat implements Listener {
 
 		format = format.replace("%player%", "%s").replace("%message%", "%s");
 
+		String prefix = PlaceholderChat.getInstance().getChat().getPlayerPrefix(e.getPlayer());
+		String suffix = PlaceholderChat.getInstance().getChat().getPlayerSuffix(e.getPlayer());
+
+		format = format.replace("%prefix%", prefix).replace("%suffix%", suffix);
+
 		format = PlaceholderAPI.setPlaceholders(e.getPlayer(), format);
 
 		try {
