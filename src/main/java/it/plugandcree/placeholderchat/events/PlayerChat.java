@@ -25,6 +25,7 @@ public class PlayerChat implements Listener {
 		for (PermissionAttachmentInfo p : e.getPlayer().getEffectivePermissions()) {
 			if (p.getPermission().startsWith("group.")) {
 				perms = p.getPermission().split("\\.")[1];
+				break;
 			}
 		}
 

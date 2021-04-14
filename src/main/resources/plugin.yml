@@ -2,5 +2,6 @@ name: ${project.name}
 version: ${project.version}
 api-version: 1.15
 author: "Plug_And_Cree"
+depends: [PlaceholderAPI, Vault]
 
 main: it.plugandcree.placeholderchat.PlaceholderChat
