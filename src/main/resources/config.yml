@@ -1,3 +1,5 @@
+default-format: "&b%player% &8>> &7%message%"
+
 chat-format:
     user: "[%player_ping%] %prefix%%player%%suffix% >> %message%"
     admin: "&c[ADMIN] &7%prefix%%player%%suffix% >> &4%message%"

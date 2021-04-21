@@ -28,14 +28,15 @@ public class PlayerChat implements Listener {
 				break;
 			}
 		}
-
+		String format;
+		
 		if (perms == null)
-			return;
+			format = PlaceholderChat.getInstance().getMainConfig().getRawString("default-format");
+		else
+			format = formats.get(perms);
 
 		if (!formats.keySet().contains(perms))
-			return;
-
-		String format = formats.get(perms);
+			format = PlaceholderChat.getInstance().getMainConfig().getRawString("default-format");
 
 		format = format.replace("%player%", "%s").replace("%message%", "%s");
 

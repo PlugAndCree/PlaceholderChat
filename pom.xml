@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.plugandcree</groupId>
 	<artifactId>placeholderchat</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<name>PlaceholderChat</name>
 	<repositories>
 		<repository>
