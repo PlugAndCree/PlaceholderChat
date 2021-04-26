@@ -5,7 +5,6 @@ import java.util.Map;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import it.plugandcree.placeholderchat.PlaceholderChat;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -20,14 +19,18 @@ public class PlayerChat implements Listener {
 
 		Map<String, String> formats = PlaceholderChat.getInstance().getFormats();
 
-		String perms = null;
+		String perms = PlaceholderChat.getInstance().getPerms().getPrimaryGroup(e.getPlayer());
 
-		for (PermissionAttachmentInfo p : e.getPlayer().getEffectivePermissions()) {
-			if (p.getPermission().startsWith("group.")) {
-				perms = p.getPermission().split("\\.")[1];
-				break;
-			}
-		}
+		/*
+		 *for (PermissionAttachmentInfo p : e.getPlayer().getEffectivePermissions()) {
+		 *	if (p.getPermission().startsWith("group.")) {
+		 *		perms = p.getPermission().split("\\.")[1];
+		 *		break;
+		 *	}
+		 * 
+		 * OLD CODE
+		 * 
+		}*/
 		String format;
 		
 		if (perms == null)

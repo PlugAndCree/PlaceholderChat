@@ -13,6 +13,7 @@ import it.plugandcree.placeholderchat.config.ConfigProcessor;
 import it.plugandcree.placeholderchat.config.CustomConfig;
 import it.plugandcree.placeholderchat.events.PlayerChat;
 import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.permission.Permission;
 
 public class PlaceholderChat extends JavaPlugin {
 
@@ -21,6 +22,7 @@ public class PlaceholderChat extends JavaPlugin {
 	private CustomConfig mainConfig;
 	private Map<String, String> formats;
 	private Chat chat = null;
+	private Permission perms = null;
 
 	@Override
 	public void onEnable() {
@@ -35,6 +37,8 @@ public class PlaceholderChat extends JavaPlugin {
 		if (!setupChat()) {
 			getLogger().severe("VAULT NOT FOUND");
 		}
+		
+		setupPermissions();
 	}
 
 	public void reloadConfig() {
@@ -96,7 +100,17 @@ public class PlaceholderChat extends JavaPlugin {
 		return chat != null;
 	}
 
+	private boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        perms = rsp.getProvider();
+        return perms != null;
+    }
+	
 	public Chat getChat() {
 		return chat;
+	}
+
+	public Permission getPerms() {
+		return perms;
 	}
 }
