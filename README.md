@@ -18,7 +18,5 @@ It's like EssentialsXChat but with PlaceholderAPI:
 MAKE SURE YOU HAVE ALL THE **PlaceholderAPI** ADDON INSTALLED, IF NOT, INSTALL THEM WITH "*/papi ecloud download [...]*" THEN EXECUTE "*/papi reload*" and "*/placeholderchat reload*"
 
 **IF THE PLUGIN DOES NOT WORK CHECK THE CONSOLE!!!**
-<<<<<<< HEAD
-Maybe you don't have installed the PAPI packages
-=======
+
 Maybe you don't have installed the PAPI packages
