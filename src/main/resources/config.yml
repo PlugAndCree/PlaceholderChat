@@ -3,3 +3,12 @@ default-format: "&b%player% &8>> &7%message%"
 chat-format:
     user: "[%player_ping%] %prefix%%player%%suffix% >> %message%"
     admin: "&c[ADMIN] &7%prefix%%player%%suffix% >> &4%message%"
+    
+user-hover-text: |-
+    &cName: &7%player_name% 
+    &7Coordinates:
+    &c  • X: &7%player_x%
+    &c  • Y: &7%player_y%
+    &c  • Z: &7%player_z%
+    &r
+    &cRanks: &7%vault_ranks%

@@ -6,7 +6,8 @@ import java.util.Map;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
+
+import com.spigot.libraries.plugin.ReloadablePlugin;
 
 import it.plugandcree.placeholderchat.commands.MainCommand;
 import it.plugandcree.placeholderchat.config.ConfigProcessor;
@@ -15,7 +16,7 @@ import it.plugandcree.placeholderchat.events.PlayerChat;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
-public class PlaceholderChat extends JavaPlugin {
+public class PlaceholderChat extends ReloadablePlugin {
 
 	private static PlaceholderChat instance;
 	private CustomConfig langConfig;
@@ -28,23 +29,20 @@ public class PlaceholderChat extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 
-		reloadConfig();
-
-		getServer().getPluginManager().registerEvents(new PlayerChat(), this);
-
-		new MainCommand().register(this);
-
-		if (!setupChat()) {
-			getLogger().severe("VAULT NOT FOUND");
-		}
-		
-		setupPermissions();
-	}
-
-	public void reloadConfig() {
 		setLangConfig(createConfigFile("lang.yml"));
 		setMainConfig(createConfigFile("config.yml"));
 		setFormats(ConfigProcessor.getFormats());
+		getServer().getPluginManager().registerEvents(trackListener(new PlayerChat()), this);
+
+		trackCommand(new MainCommand().register(this));
+
+		if (isFirstLoad()) {
+			if (!setupChat()) {
+				getLogger().severe("VAULT NOT FOUND");
+			}
+
+			setupPermissions();
+		}
 	}
 
 	private CustomConfig createConfigFile(String name) {
@@ -101,11 +99,11 @@ public class PlaceholderChat extends JavaPlugin {
 	}
 
 	private boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        perms = rsp.getProvider();
-        return perms != null;
-    }
-	
+		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+		perms = rsp.getProvider();
+		return perms != null;
+	}
+
 	public Chat getChat() {
 		return chat;
 	}

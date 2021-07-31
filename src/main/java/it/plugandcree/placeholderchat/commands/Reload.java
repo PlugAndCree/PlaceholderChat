@@ -21,8 +21,9 @@ public class Reload extends Command {
 	public boolean execute(CommandSender sender, org.bukkit.command.Command cmd, List<String> args) {
 		CustomConfig lang = PlaceholderChat.getInstance().getLangConfig();
 		
-		PlaceholderChat.getInstance().reloadConfig();
+		PlaceholderChat.getInstance().reload();
 		sender.sendMessage(lang.getString("messages.reload-complete"));
+		
 		return true;
 	}
 }

@@ -4,6 +4,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class CustomConfig extends YamlConfiguration {
+	public String superGetString(String path) {
+		return super.getString(path);
+	}
+	
 	public String getRawString(String path) {
 		return ChatColor.translateAlternateColorCodes('&', super.getString(path));
 	}
