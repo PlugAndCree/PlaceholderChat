@@ -22,4 +22,3 @@ MAKE SURE YOU HAVE ALL THE **PlaceholderAPI** ADDON INSTALLED, IF NOT, INSTALL T
 Maybe you don't have installed the PAPI packages
 =======
 Maybe you don't have installed the PAPI packages
->>>>>>> origin/master
