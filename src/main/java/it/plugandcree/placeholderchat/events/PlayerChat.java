@@ -24,8 +24,6 @@ public class PlayerChat implements Listener {
 
 		if (e.isCancelled())
 			return;
-
-		System.out.println("---> " + e.getPlayer().getDisplayName());
 		
 		Map<String, String> formats = PlaceholderChat.getInstance().getFormats();
 
@@ -63,7 +61,6 @@ public class PlayerChat implements Listener {
 		TextComponent component = new TextComponent();
 		String usernameString = e.getPlayer().getDisplayName();
 		String[] splitted = e.getFormat().split(Pattern.quote("%s"), 2);
-		System.out.println(e.getFormat());
 		
 		if (splitted.length > 1) {
 			component = new TextComponent(splitted[0]);
