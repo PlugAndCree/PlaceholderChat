@@ -25,6 +25,8 @@ public class PlayerChat implements Listener {
 		if (e.isCancelled())
 			return;
 
+		System.out.println("---> " + e.getPlayer().getDisplayName());
+		
 		Map<String, String> formats = PlaceholderChat.getInstance().getFormats();
 
 		String perms = PlaceholderChat.getInstance().getPerms().getPrimaryGroup(e.getPlayer());
@@ -57,17 +59,21 @@ public class PlayerChat implements Listener {
 		}
 
 		e.setCancelled(true);
-		
+
 		TextComponent component = new TextComponent();
 		String usernameString = e.getPlayer().getDisplayName();
 		String[] splitted = e.getFormat().split(Pattern.quote("%s"), 2);
-
+		System.out.println(e.getFormat());
+		
 		if (splitted.length > 1) {
 			component = new TextComponent(splitted[0]);
-			usernameString = ChatColor.getLastColors(splitted[0]) + e.getPlayer().getDisplayName();
+			usernameString = ChatColor.getLastColors(splitted[0]) + usernameString;
 		}
 
-		BaseComponent username = TextComponent.fromLegacyText(usernameString)[0];
+		BaseComponent[] usernameSplitted = TextComponent.fromLegacyText(usernameString);
+		BaseComponent username = new TextComponent("");
+		for(BaseComponent comp : usernameSplitted) username.addExtra(comp);
+		
 		username.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 				new BaseComponent[] { new TextComponent(PlaceholderAPI.setPlaceholders(e.getPlayer(),
 						PlaceholderChat.getInstance().getMainConfig().getRawString("user-hover-text"))) }));
@@ -75,9 +81,9 @@ public class PlayerChat implements Listener {
 		component.addExtra(username);
 
 		if (splitted.length == 1) {
-			component.addExtra(new TextComponent(String.format(splitted[0].replaceFirst("$s", "%s"), e.getMessage())));
+			component.addExtra(new TextComponent(String.format(splitted[0], e.getMessage())));
 		} else
-			component.addExtra(new TextComponent(String.format(splitted[1].replaceFirst("$s", "%s"), e.getMessage())));
+			component.addExtra(new TextComponent(String.format(splitted[1], e.getMessage())));
 
 		for (Player p : e.getRecipients()) {
 			p.spigot().sendMessage(component);
