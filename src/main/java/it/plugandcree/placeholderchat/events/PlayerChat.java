@@ -24,7 +24,7 @@ public class PlayerChat implements Listener {
 
 		if (e.isCancelled())
 			return;
-		
+
 		Map<String, String> formats = PlaceholderChat.getInstance().getFormats();
 
 		String perms = PlaceholderChat.getInstance().getPerms().getPrimaryGroup(e.getPlayer());
@@ -59,9 +59,10 @@ public class PlayerChat implements Listener {
 		e.setCancelled(true);
 
 		TextComponent component = new TextComponent();
-		String usernameString = e.getPlayer().getDisplayName();
+		String usernameString = e.getPlayer().getDisplayName().replace(ChatColor.translateAlternateColorCodes('&', prefix), "").replace(ChatColor.translateAlternateColorCodes('&', suffix), "");
+
 		String[] splitted = e.getFormat().split(Pattern.quote("%s"), 2);
-		
+
 		if (splitted.length > 1) {
 			component = new TextComponent(splitted[0]);
 			usernameString = ChatColor.getLastColors(splitted[0]) + usernameString;
@@ -69,8 +70,9 @@ public class PlayerChat implements Listener {
 
 		BaseComponent[] usernameSplitted = TextComponent.fromLegacyText(usernameString);
 		BaseComponent username = new TextComponent("");
-		for(BaseComponent comp : usernameSplitted) username.addExtra(comp);
-		
+		for (BaseComponent comp : usernameSplitted)
+			username.addExtra(comp);
+
 		username.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 				new BaseComponent[] { new TextComponent(PlaceholderAPI.setPlaceholders(e.getPlayer(),
 						PlaceholderChat.getInstance().getMainConfig().getRawString("user-hover-text"))) }));
