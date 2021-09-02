@@ -13,7 +13,7 @@
 		</repository>
 		<repository>
 			<id>tecno-repo</id>
-			<url>http://repo.mrtecno.online/repository/public-maven/</url>
+			<url>http://repo.mrtecno.tk/repository/public-maven/</url>
 		</repository>
 		<repository>
 			<id>placeholderapi</id>
