@@ -7,5 +7,5 @@ depends: [PlaceholderAPI, Vault]
 main: it.plugandcree.placeholderchat.PlaceholderChat
 
 commands:
-    placeholderapi:
+    placeholderchat:
         description: main cmd
