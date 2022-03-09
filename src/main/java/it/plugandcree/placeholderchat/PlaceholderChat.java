@@ -13,6 +13,7 @@ import it.plugandcree.placeholderchat.commands.MainCommand;
 import it.plugandcree.placeholderchat.config.ConfigProcessor;
 import it.plugandcree.placeholderchat.config.CustomConfig;
 import it.plugandcree.placeholderchat.events.PlayerChat;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
@@ -24,11 +25,14 @@ public class PlaceholderChat extends ReloadablePlugin {
 	private Map<String, String> formats;
 	private Chat chat = null;
 	private Permission perms = null;
+	private BukkitAudiences adventure;
 
 	@Override
 	public void onEnable() {
 		instance = this;
 
+		adventure = BukkitAudiences.create(this);
+		
 		setLangConfig(createConfigFile("lang.yml"));
 		setMainConfig(createConfigFile("config.yml"));
 		setFormats(ConfigProcessor.getFormats());
@@ -110,5 +114,9 @@ public class PlaceholderChat extends ReloadablePlugin {
 
 	public Permission getPerms() {
 		return perms;
+	}
+
+	public BukkitAudiences getAdventure() {
+		return adventure;
 	}
 }

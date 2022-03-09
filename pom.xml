@@ -52,6 +52,22 @@
 			<version>1.7</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>net.kyori</groupId>
+			<artifactId>adventure-api</artifactId>
+			<version>4.10.1</version>
+		</dependency>
+		<dependency>
+			<groupId>dev.vankka</groupId>
+			<artifactId>enhancedlegacytext</artifactId>
+			<version>1.0.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.kyori</groupId>
+			<artifactId>adventure-platform-bukkit</artifactId>
+			<version>4.1.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>
@@ -80,12 +96,6 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<artifactSet>
-								<includes>
-									<include>com.spigot.libraries:spigot-commons</include>
-									<include>com.haroldstudios:hexitextlib</include>
-								</includes>
-							</artifactSet>
 							<relocations>
 								<relocation>
 									<pattern>com.spigot.libraries</pattern>
@@ -95,6 +105,16 @@
 								<relocation>
 									<pattern>com.haroldstudios</pattern>
 									<shadedPattern>it.plugandcree.placeholderchat.libraries.hex
+									</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>net.kyori</pattern>
+									<shadedPattern>it.plugandcree.placeholderchat.libraries.adventure
+									</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>dev.vankka</pattern>
+									<shadedPattern>it.plugandcree.placeholderchat.libraries.adventure
 									</shadedPattern>
 								</relocation>
 							</relocations>

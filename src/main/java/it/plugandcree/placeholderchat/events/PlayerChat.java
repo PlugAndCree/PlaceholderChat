@@ -1,27 +1,23 @@
 package it.plugandcree.placeholderchat.events;
 
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import dev.vankka.enhancedlegacytext.EnhancedLegacyText;
 import it.plugandcree.placeholderchat.PlaceholderChat;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Content;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
 
 public class PlayerChat implements Listener {
 
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerChat(AsyncPlayerChatEvent e) {
 
 		if (e.isCancelled())
@@ -60,45 +56,40 @@ public class PlayerChat implements Listener {
 
 		e.setCancelled(true);
 
-		TextComponent component = new TextComponent();
-		String usernameString = e.getPlayer().getDisplayName()
-				.replace(ChatColor.translateAlternateColorCodes('&', prefix), "")
-				.replace(ChatColor.translateAlternateColorCodes('&', suffix), "");
+		String[] adventureString = e.getFormat().split("%s");
+		Component adventureComponent = EnhancedLegacyText.get().buildComponent("").build();
 
-		String[] splitted = e.getFormat().split(Pattern.quote("%s"), 2);
+		// %s > %s - len = 1 splitted
+		// qualcosa %s > %s - len = 2 splitted
 
-		if (splitted.length > 1) {
-			component = new TextComponent(splitted[0]);
-			usernameString = ChatColor.getLastColors(splitted[0]) + usernameString;
-		}
-
-		BaseComponent[] usernameSplitted = TextComponent.fromLegacyText(usernameString);
-		BaseComponent username = new TextComponent("");
-		for (BaseComponent comp : usernameSplitted)
-			username.addExtra(comp);
-
-		username.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-				new Content[] { new Text(PlaceholderAPI.setPlaceholders(e.getPlayer(),
-						PlaceholderChat.getInstance().getMainConfig().getRawString("user-hover-text"))) }));
 		
-		//TODO rgb codes not working on text component
-		/* possible solutions:
-		 * 
-		 * 1) https://hub.spigotmc.org/jira/browse/SPIGOT-5829
-		 * 2) https://github.com/KyoriPowered/adventure
-		 *
-		 */
-		e.getPlayer().sendMessage(PlaceholderAPI.setPlaceholders(e.getPlayer(), PlaceholderChat.getInstance().getMainConfig().getRawString("user-hover-text")));
+		//If the player has a prefix, append it
+		if (adventureString.length == 2)
+			adventureComponent = adventureComponent
+					.append(EnhancedLegacyText.get().buildComponent(adventureString[0]).build());
+		
+		//Player name component and hover event
+		adventureComponent = adventureComponent
+				.append(EnhancedLegacyText.get().buildComponent(e.getPlayer().getDisplayName()).build()
+						.hoverEvent(HoverEvent.showText(
+								EnhancedLegacyText.get().buildComponent(PlaceholderAPI.setPlaceholders(e.getPlayer(),
+										PlaceholderChat.getInstance().getMainConfig().getRawString("user-hover-text"))
 
-		component.addExtra(username);
-
-		if (splitted.length == 1) {
-			component.addExtra(new TextComponent(String.format(splitted[0], e.getMessage())));
-		} else
-			component.addExtra(new TextComponent(String.format(splitted[1], e.getMessage())));
+								).build().asComponent())));
+		
+		//Chat separator between player name and message
+		adventureComponent = adventureComponent
+				.append(EnhancedLegacyText.get().buildComponent(adventureString[adventureString.length - 1]).build());
+		
+		//Chat message
+		if (e.getPlayer().hasPermission("placeholderchat.colorchat"))
+			adventureComponent = adventureComponent
+					.append(EnhancedLegacyText.get().buildComponent(e.getMessage()).build());
+		else
+			adventureComponent = adventureComponent.append(Component.text(e.getMessage()));
 
 		for (Player p : e.getRecipients()) {
-			p.spigot().sendMessage(component);
+			PlaceholderChat.getInstance().getAdventure().player(p).sendMessage(adventureComponent);
 		}
 
 		Bukkit.getLogger().info(e.getPlayer().getName() + " > " + e.getMessage());
