@@ -1,22 +1,20 @@
 package it.plugandcree.placeholderchat.commands;
 
-import java.util.List;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-
-import com.spigot.libraries.commands.Command;
+import org.spigot.commons.commands.ExecutionContext;
+import org.spigot.commons.commands.builtin.PermissibleCommand;
 
 import it.plugandcree.placeholderchat.PlaceholderChat;
 import it.plugandcree.placeholderchat.config.CustomConfig;
 
-public class Help extends Command {
+public class Help extends PermissibleCommand {
 	public Help() {
 		super("help", "placeholderchat.help", PlaceholderChat.getInstance().getLangConfig().noPerm());
 	}
-	
-	public boolean execute(CommandSender sender, org.bukkit.command.Command cmd, List<String> args) {
-		
+
+	@Override
+	public boolean execute(CommandSender sender, ExecutionContext context) {
 		CustomConfig lang = PlaceholderChat.getInstance().getLangConfig();
 		
 		sender.sendMessage(lang.getString("messages.help"));

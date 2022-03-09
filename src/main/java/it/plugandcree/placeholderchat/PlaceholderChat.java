@@ -6,8 +6,7 @@ import java.util.Map;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.RegisteredServiceProvider;
-
-import com.spigot.libraries.plugin.ReloadablePlugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import it.plugandcree.placeholderchat.commands.MainCommand;
 import it.plugandcree.placeholderchat.config.ConfigProcessor;
@@ -17,7 +16,7 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
-public class PlaceholderChat extends ReloadablePlugin {
+public class PlaceholderChat extends JavaPlugin {
 
 	private static PlaceholderChat instance;
 	private CustomConfig langConfig;
@@ -32,21 +31,24 @@ public class PlaceholderChat extends ReloadablePlugin {
 		instance = this;
 
 		adventure = BukkitAudiences.create(this);
-		
+
+		reload();
+
+		getServer().getPluginManager().registerEvents(new PlayerChat(), this);
+
+		new MainCommand().register(this);
+
+		if (!setupChat()) {
+			getLogger().severe("VAULT NOT FOUND");
+		}
+
+		setupPermissions();
+	}
+
+	public void reload() {
 		setLangConfig(createConfigFile("lang.yml"));
 		setMainConfig(createConfigFile("config.yml"));
 		setFormats(ConfigProcessor.getFormats());
-		getServer().getPluginManager().registerEvents(trackListener(new PlayerChat()), this);
-
-		trackCommand(new MainCommand().register(this));
-
-		if (isFirstLoad()) {
-			if (!setupChat()) {
-				getLogger().severe("VAULT NOT FOUND");
-			}
-
-			setupPermissions();
-		}
 	}
 
 	private CustomConfig createConfigFile(String name) {
