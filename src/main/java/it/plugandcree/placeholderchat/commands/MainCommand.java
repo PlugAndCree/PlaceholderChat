@@ -1,7 +1,5 @@
 package it.plugandcree.placeholderchat.commands;
 
-import java.util.List;
-
 import org.bukkit.command.CommandSender;
 import org.spigot.commons.commands.Command;
 import org.spigot.commons.commands.ExecutionContext;
