@@ -5,3 +5,7 @@ author: "Plug_And_Cree"
 depends: [PlaceholderAPI, Vault]
 
 main: it.plugandcree.placeholderchat.PlaceholderChat
+
+commands:
+    placeholderapi:
+        description: main cmd
