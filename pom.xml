@@ -9,7 +9,8 @@
 	<repositories>
 		<repository>
 			<id>spigot-repo</id>
-			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/
+			</url>
 		</repository>
 		<repository>
 			<id>tecno-repo</id>
@@ -17,7 +18,8 @@
 		</repository>
 		<repository>
 			<id>placeholderapi</id>
-			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/
+			</url>
 		</repository>
 	</repositories>
 
@@ -25,8 +27,13 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.15.2-R0.1-SNAPSHOT</version>
+			<version>1.17.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.haroldstudios</groupId>
+			<artifactId>hexitextlib</artifactId>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.spigot.libraries</groupId>
@@ -76,14 +83,22 @@
 							<artifactSet>
 								<includes>
 									<include>com.spigot.libraries:spigot-commons</include>
+									<include>com.haroldstudios:hexitextlib</include>
 								</includes>
 							</artifactSet>
 							<relocations>
 								<relocation>
 									<pattern>com.spigot.libraries</pattern>
-									<shadedPattern>it.plugandcree.placeholderchat.libraries</shadedPattern>
+									<shadedPattern>it.plugandcree.placeholderchat.libraries
+									</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>com.haroldstudios</pattern>
+									<shadedPattern>it.plugandcree.placeholderchat.libraries.hex
+									</shadedPattern>
 								</relocation>
 							</relocations>
+							<minimizeJar>true</minimizeJar>
 						</configuration>
 					</execution>
 				</executions>

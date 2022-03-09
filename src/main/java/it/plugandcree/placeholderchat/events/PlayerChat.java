@@ -16,6 +16,8 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Content;
+import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class PlayerChat implements Listener {
 
@@ -59,7 +61,9 @@ public class PlayerChat implements Listener {
 		e.setCancelled(true);
 
 		TextComponent component = new TextComponent();
-		String usernameString = e.getPlayer().getDisplayName().replace(ChatColor.translateAlternateColorCodes('&', prefix), "").replace(ChatColor.translateAlternateColorCodes('&', suffix), "");
+		String usernameString = e.getPlayer().getDisplayName()
+				.replace(ChatColor.translateAlternateColorCodes('&', prefix), "")
+				.replace(ChatColor.translateAlternateColorCodes('&', suffix), "");
 
 		String[] splitted = e.getFormat().split(Pattern.quote("%s"), 2);
 
@@ -74,8 +78,17 @@ public class PlayerChat implements Listener {
 			username.addExtra(comp);
 
 		username.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-				new BaseComponent[] { new TextComponent(PlaceholderAPI.setPlaceholders(e.getPlayer(),
+				new Content[] { new Text(PlaceholderAPI.setPlaceholders(e.getPlayer(),
 						PlaceholderChat.getInstance().getMainConfig().getRawString("user-hover-text"))) }));
+		
+		//TODO rgb codes not working on text component
+		/* possible solutions:
+		 * 
+		 * 1) https://hub.spigotmc.org/jira/browse/SPIGOT-5829
+		 * 2) https://github.com/KyoriPowered/adventure
+		 *
+		 */
+		e.getPlayer().sendMessage(PlaceholderAPI.setPlaceholders(e.getPlayer(), PlaceholderChat.getInstance().getMainConfig().getRawString("user-hover-text")));
 
 		component.addExtra(username);
 

@@ -3,17 +3,22 @@ package it.plugandcree.placeholderchat.config;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.haroldstudios.hexitextlib.HexResolver;
+
+
 public class CustomConfig extends YamlConfiguration {
+	
 	public String superGetString(String path) {
 		return super.getString(path);
 	}
 	
 	public String getRawString(String path) {
-		return ChatColor.translateAlternateColorCodes('&', super.getString(path));
+		
+		return ChatColor.translateAlternateColorCodes('&', HexResolver.parseHexString(super.getString(path)));
 	}
 	
 	public String getPrefix() {
-		return ChatColor.translateAlternateColorCodes('&', super.getString("messages.prefix"));
+		return ChatColor.translateAlternateColorCodes('&', HexResolver.parseHexString(super.getString("messages.prefix")));
 	}
 	
 	@Override
