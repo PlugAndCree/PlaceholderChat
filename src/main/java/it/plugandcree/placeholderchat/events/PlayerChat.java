@@ -3,6 +3,7 @@ package it.plugandcree.placeholderchat.events;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -59,18 +60,21 @@ public class PlayerChat implements Listener {
 		String[] adventureString = e.getFormat().split("%s");
 		Component adventureComponent = EnhancedLegacyText.get().buildComponent("").build();
 
-		// %s > %s - len = 1 splitted
-		// qualcosa %s > %s - len = 2 splitted
+		// %s > %s - len = 2 splitted
+		// ''
+		// ' > '
+		
+		// something %s > %s - len = 2 splitted
+		// 'something '
+		// ' > '
 
 		
-		//If the player has a prefix, append it
-		if (adventureString.length == 2)
-			adventureComponent = adventureComponent
-					.append(EnhancedLegacyText.get().buildComponent(adventureString[0]).build());
+		adventureComponent = adventureComponent
+				.append(EnhancedLegacyText.get().buildComponent(adventureString[0]).build());
 		
 		//Player name component and hover event
 		adventureComponent = adventureComponent
-				.append(EnhancedLegacyText.get().buildComponent(e.getPlayer().getDisplayName()).build()
+				.append(EnhancedLegacyText.get().buildComponent(ChatColor.getLastColors(adventureString[0]) + e.getPlayer().getDisplayName()).build()
 						.hoverEvent(HoverEvent.showText(
 								EnhancedLegacyText.get().buildComponent(PlaceholderAPI.setPlaceholders(e.getPlayer(),
 										PlaceholderChat.getInstance().getMainConfig().getRawString("user-hover-text"))
@@ -79,14 +83,16 @@ public class PlayerChat implements Listener {
 		
 		//Chat separator between player name and message
 		adventureComponent = adventureComponent
-				.append(EnhancedLegacyText.get().buildComponent(adventureString[adventureString.length - 1]).build());
+				.append(EnhancedLegacyText.get().buildComponent(adventureString[1]).build());
 		
 		//Chat message
 		if (e.getPlayer().hasPermission("placeholderchat.colorchat"))
 			adventureComponent = adventureComponent
-					.append(EnhancedLegacyText.get().buildComponent(e.getMessage()).build());
+					.append(EnhancedLegacyText.get().buildComponent(ChatColor.getLastColors(adventureString[1]) + e.getMessage()).build());
 		else
-			adventureComponent = adventureComponent.append(Component.text(e.getMessage()));
+			adventureComponent = adventureComponent
+				.append(EnhancedLegacyText.get().buildComponent(ChatColor.getLastColors(adventureString[1])).build())
+				.append(Component.text(e.getMessage()));
 
 		for (Player p : e.getRecipients()) {
 			PlaceholderChat.getInstance().getAdventure().player(p).sendMessage(adventureComponent);
@@ -94,4 +100,5 @@ public class PlayerChat implements Listener {
 
 		Bukkit.getLogger().info(e.getPlayer().getName() + " > " + e.getMessage());
 	}
+	
 }
