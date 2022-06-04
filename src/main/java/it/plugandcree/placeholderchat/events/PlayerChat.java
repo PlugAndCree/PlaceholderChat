@@ -1,9 +1,10 @@
 package it.plugandcree.placeholderchat.events;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -74,7 +75,7 @@ public class PlayerChat implements Listener {
 		
 		//Player name component and hover event
 		adventureComponent = adventureComponent
-				.append(EnhancedLegacyText.get().buildComponent(ChatColor.getLastColors(adventureString[0]) + e.getPlayer().getDisplayName()).build()
+				.append(EnhancedLegacyText.get().buildComponent(getLastColor(adventureString[0]) + e.getPlayer().getDisplayName()).build()
 						.hoverEvent(HoverEvent.showText(
 								EnhancedLegacyText.get().buildComponent(PlaceholderAPI.setPlaceholders(e.getPlayer(),
 										PlaceholderChat.getInstance().getMainConfig().getRawString("user-hover-text"))
@@ -84,21 +85,42 @@ public class PlayerChat implements Listener {
 		//Chat separator between player name and message
 		adventureComponent = adventureComponent
 				.append(EnhancedLegacyText.get().buildComponent(adventureString[1]).build());
-		
+				
 		//Chat message
 		if (e.getPlayer().hasPermission("placeholderchat.colorchat"))
 			adventureComponent = adventureComponent
-					.append(EnhancedLegacyText.get().buildComponent(ChatColor.getLastColors(adventureString[1]) + e.getMessage()).build());
+				.append(EnhancedLegacyText.get().buildComponent(getLastColor(adventureString[1]) + e.getMessage()).build());
 		else
 			adventureComponent = adventureComponent
-				.append(EnhancedLegacyText.get().buildComponent(ChatColor.getLastColors(adventureString[1])).build())
+				.append(EnhancedLegacyText.get().buildComponent(getLastColor(adventureString[1])).build())
 				.append(Component.text(e.getMessage()));
+			
 
 		for (Player p : e.getRecipients()) {
 			PlaceholderChat.getInstance().getAdventure().player(p).sendMessage(adventureComponent);
 		}
 
 		Bukkit.getLogger().info(e.getPlayer().getName() + " > " + e.getMessage());
+	}
+	
+	private String getLastColor(String message) {
+		  String regex = ".*([&§][0-9a-fA-F]|[&§]#[0-9a-fA-F]{6})|.*([&§][olknm])";
+		  Pattern p = Pattern.compile(regex);
+		  Matcher m = p.matcher(message);
+		  
+		  if(!m.find())
+			  return "";
+		  
+		  String g1 = m.group(1);
+		  String g2 = m.group(2);
+		  
+		  if(String.valueOf(g1).equals("null"))
+			  g2 = "";
+		  
+		  if(String.valueOf(g2).equals("null"))
+			  g2 = "";
+		  
+		  return g1 + g2;	
 	}
 	
 }
