@@ -68,6 +68,16 @@ public class PlayerChat implements Listener {
 		// something %s > %s - len = 2 splitted
 		// 'something '
 		// ' > '
+		
+		// %s > %s something - len = 3 splitted
+		// ''
+		// ' > '
+		// ' something'
+		
+		// something %s > %s something - len = 3 splitted
+		// 'something '
+		// ' >asdasdasdsda '
+		// ' something'
 
 		
 		adventureComponent = adventureComponent
@@ -92,9 +102,12 @@ public class PlayerChat implements Listener {
 				.append(EnhancedLegacyText.get().buildComponent(getLastColor(adventureString[1]) + e.getMessage()).build());
 		else
 			adventureComponent = adventureComponent
-				.append(EnhancedLegacyText.get().buildComponent(getLastColor(adventureString[1])).build())
-				.append(Component.text(e.getMessage()));
-			
+				.append(EnhancedLegacyText.get().buildComponent(getLastColor(adventureString[1]) + stripColor(e.getMessage())).build());
+		
+		
+		if (adventureString.length == 3)
+			adventureComponent = adventureComponent.append(
+					EnhancedLegacyText.get().buildComponent(getLastColor(adventureString[1]) + adventureString[2]).build());
 
 		for (Player p : e.getRecipients()) {
 			PlaceholderChat.getInstance().getAdventure().player(p).sendMessage(adventureComponent);
@@ -121,6 +134,18 @@ public class PlayerChat implements Listener {
 			  g2 = "";
 		  
 		  return g1 + g2;	
+	}
+	
+	private String stripColor(String message) {
+		String regex = "([&§][0-9a-fA-F]|[&§]#[0-9a-fA-F]{6})|([&§][olknm])";
+		
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(message);
+		  
+		if(!m.find())
+			return message;
+		 
+		return m.replaceAll("");
 	}
 	
 }
