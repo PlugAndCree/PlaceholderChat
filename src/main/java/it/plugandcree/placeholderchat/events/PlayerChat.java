@@ -194,6 +194,8 @@ public class PlayerChat implements Listener {
 				.replaceAll("[&§]k", "<obfuscated>")
 				.replaceAll("[&§]r", "<reset>");
 		
+		message = message.replace("<reset></hover>","</hover>");
+		
 		return message;
 	}
 }
