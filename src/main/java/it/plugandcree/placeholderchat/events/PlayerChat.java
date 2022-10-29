@@ -122,8 +122,6 @@ public class PlayerChat implements Listener {
 		
 		format = format.replaceFirst("%s", chat);
 		
-		System.out.println(format);
-		
 		for (Player p : e.getRecipients()) {
 			String recipentCondition = getAdvancedFormat(e.getPlayer()).getRecipentCondition();
 				
