@@ -123,7 +123,11 @@ public class PlayerChat implements Listener {
 		format = format.replaceFirst("%s", chat);
 		
 		for (Player p : e.getRecipients()) {
-			String recipentCondition = getAdvancedFormat(e.getPlayer()).getRecipentCondition();
+			AdvancedFormat advancedFormat = getAdvancedFormat(e.getPlayer());
+			
+			String recipentCondition = "true";
+			if (advancedFormat != null)
+				recipentCondition = advancedFormat.getRecipentCondition();
 				
 			boolean result = ((boolean) MVEL.eval(PlaceholderAPI.setPlaceholders(p, recipentCondition))) || !PlaceholderChat.getInstance().isAdvancedMode();
 			if (result)

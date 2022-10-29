@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.plugandcree</groupId>
 	<artifactId>placeholderchat</artifactId>
-	<version>3.0.1</version>
+	<version>3.0.2</version>
 	<name>PlaceholderChat</name>
 	<repositories>
 		<repository>
