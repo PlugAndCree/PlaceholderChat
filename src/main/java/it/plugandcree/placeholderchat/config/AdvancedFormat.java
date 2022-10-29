@@ -9,6 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AdvancedFormat {
 	private String condition;
+	private String recipentCondition;
 	private int priority;
 	private String chatFormat;
 	private String userHoverText;

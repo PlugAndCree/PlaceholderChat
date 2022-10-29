@@ -29,11 +29,12 @@ public class ConfigProcessor {
 		for(String key : section.getKeys(false)) {
 			ConfigurationSection sub = section.getConfigurationSection(key);
 			String logicExpression = sub.getString("condition");
+			String recipentCondition = sub.getString("recipent-condition", "true");
 		    int priority = sub.getInt("priority", 0);
 		    String chatFormat = sub.getString("chat-format");
 		    String userHoverText = sub.getString("user-hover-text", "");
 		    
-		    formats.put(key, new AdvancedFormat(logicExpression, priority, chatFormat, userHoverText));
+		    formats.put(key, new AdvancedFormat(logicExpression, recipentCondition, priority, chatFormat, userHoverText));
 		}
 		
 		return formats;

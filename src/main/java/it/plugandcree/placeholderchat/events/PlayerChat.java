@@ -125,7 +125,11 @@ public class PlayerChat implements Listener {
 		System.out.println(format);
 		
 		for (Player p : e.getRecipients()) {
-			PlaceholderChat.getInstance().getAdventure().player(p).sendMessage(mm.deserialize(legacyToMinimessage(format)));
+			String recipentCondition = getAdvancedFormat(e.getPlayer()).getRecipentCondition();
+				
+			boolean result = ((boolean) MVEL.eval(PlaceholderAPI.setPlaceholders(p, recipentCondition))) || !PlaceholderChat.getInstance().isAdvancedMode();
+			if (result)
+				PlaceholderChat.getInstance().getAdventure().player(p).sendMessage(mm.deserialize(legacyToMinimessage(format)));
 		}
 
 		Bukkit.getLogger().info(e.getPlayer().getName() + " > " + e.getMessage());
