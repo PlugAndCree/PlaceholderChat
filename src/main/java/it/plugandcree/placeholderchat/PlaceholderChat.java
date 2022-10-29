@@ -9,23 +9,32 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import it.plugandcree.placeholderchat.commands.MainCommand;
+import it.plugandcree.placeholderchat.config.AdvancedFormat;
 import it.plugandcree.placeholderchat.config.ConfigProcessor;
 import it.plugandcree.placeholderchat.config.CustomConfig;
 import it.plugandcree.placeholderchat.events.PlayerChat;
+import lombok.Getter;
+import lombok.Setter;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
+@Getter
+@Setter
 public class PlaceholderChat extends JavaPlugin {
 
-	private static PlaceholderChat instance;
+	private static @Getter PlaceholderChat instance;
 	private CustomConfig langConfig;
 	private CustomConfig mainConfig;
-	private Map<String, String> formats;
+	private String defaultFormat;
+	private Map<String, String> simpleFormats;
+	private Map<String, AdvancedFormat> advancedFormats;
+	private boolean advancedMode;
+	private String simpleUserHoverText;
 	private Chat chat = null;
 	private Permission perms = null;
 	private BukkitAudiences adventure;
-
+	
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -48,7 +57,14 @@ public class PlaceholderChat extends JavaPlugin {
 	public void reload() {
 		setLangConfig(createConfigFile("lang.yml"));
 		setMainConfig(createConfigFile("config.yml"));
-		setFormats(ConfigProcessor.getFormats());
+		setDefaultFormat(getMainConfig().superGetString("default-format"));
+		setAdvancedMode(getMainConfig().getBoolean("advanced-mode", false));
+		setSimpleFormats(ConfigProcessor.getSimpleFormats());
+		setSimpleUserHoverText(getMainConfig().getRawString("user-hover-text"));
+		setAdvancedFormats(ConfigProcessor.getAdvancedFormats());
+		
+		if (advancedMode)
+			getLogger().info("!!! Advanced mode enabled !!!");
 	}
 
 	private CustomConfig createConfigFile(String name) {
@@ -66,35 +82,7 @@ public class PlaceholderChat extends JavaPlugin {
 			throw new RuntimeException(e);
 		}
 	}
-
-	public static PlaceholderChat getInstance() {
-		return instance;
-	}
-
-	public CustomConfig getLangConfig() {
-		return langConfig;
-	}
-
-	public void setLangConfig(CustomConfig langConfig) {
-		this.langConfig = langConfig;
-	}
-
-	public CustomConfig getMainConfig() {
-		return mainConfig;
-	}
-
-	public void setMainConfig(CustomConfig mainConfig) {
-		this.mainConfig = mainConfig;
-	}
-
-	public Map<String, String> getFormats() {
-		return formats;
-	}
-
-	public void setFormats(Map<String, String> formats) {
-		this.formats = formats;
-	}
-
+	
 	private boolean setupChat() {
 		if (getServer().getPluginManager().getPlugin("Vault") == null)
 			return false;
@@ -108,17 +96,5 @@ public class PlaceholderChat extends JavaPlugin {
 		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
 		perms = rsp.getProvider();
 		return perms != null;
-	}
-
-	public Chat getChat() {
-		return chat;
-	}
-
-	public Permission getPerms() {
-		return perms;
-	}
-
-	public BukkitAudiences getAdventure() {
-		return adventure;
 	}
 }

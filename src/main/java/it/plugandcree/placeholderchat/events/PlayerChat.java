@@ -10,10 +10,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.mvel2.MVEL;
 
 import it.plugandcree.placeholderchat.PlaceholderChat;
+import it.plugandcree.placeholderchat.config.AdvancedFormat;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class PlayerChat implements Listener {
@@ -21,26 +23,23 @@ public class PlayerChat implements Listener {
 	private static final Pattern PATTERN_HEX = Pattern.compile("[§&](#[0-9a-fA-F]{6})");
 	private static final Pattern PATTERN_GRADIENT = Pattern.compile("\\{(([&§][0-9a-f]|[&§]#[0-9a-f]{6})(\\,[&§][0-9a-f]|\\,[&§]#[0-9a-f]{6})+)\\}");
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerChat(AsyncPlayerChatEvent e) {
 		 
 		if (e.isCancelled())
 			return;
 
-		Map<String, String> formats = PlaceholderChat.getInstance().getFormats();
-
-		String perms = PlaceholderChat.getInstance().getPerms().getPrimaryGroup(e.getPlayer());
-
-		String format;
-
-		if (perms == null)
-			format = PlaceholderChat.getInstance().getMainConfig().superGetString("default-format");
+		String format = null;
+		
+		if (PlaceholderChat.getInstance().isAdvancedMode()) {
+			if (getAdvancedFormat(e.getPlayer()) == null)
+				format = PlaceholderChat.getInstance().getDefaultFormat();
+			else
+				format = getAdvancedFormat(e.getPlayer()).getChatFormat();
+		}
 		else
-			format = formats.get(perms);
-
-		if (!formats.keySet().contains(perms))
-			format = PlaceholderChat.getInstance().getMainConfig().superGetString("default-format");
-
+			format = getSimpleFormat(e.getPlayer());
+		
 		format = format.replace("%player%", "%s").replace("%message%", "%s");
 
 		String prefix = PlaceholderChat.getInstance().getChat().getPlayerPrefix(e.getPlayer());
@@ -56,32 +55,77 @@ public class PlayerChat implements Listener {
 			e.setFormat(format);
 		} catch (Exception err) {
 			PlaceholderChat.getInstance().getLogger()
-					.severe(String.format("Some placeholder in group %s does not exist", perms));
+					.severe(String.format("Some placeholders for player %s does not exist", e.getPlayer().getName()));
 			return;
 		}
 		
 		e.setCancelled(true);
 		
+		sendChatMessage(e);
+	}
+	
+	private AdvancedFormat getAdvancedFormat(Player p) {
+		Map<String, AdvancedFormat> formats = PlaceholderChat.getInstance().getAdvancedFormats();
+		String found = null;
+		
+		for (String key : formats.keySet()) {
+			boolean result = (boolean) MVEL.eval(PlaceholderAPI.setPlaceholders(p, formats.get(key).getCondition()));
+			
+			if (!result)
+				continue;
+			
+			if (found == null || formats.get(found).getPriority() < formats.get(key).getPriority())
+				found = key;
+		}
+		
+		return formats.get(found);
+	}
+	
+	private String getSimpleFormat(Player p) {
+		Map<String, String> formats = PlaceholderChat.getInstance().getSimpleFormats();
+
+		String perms = PlaceholderChat.getInstance().getPerms().getPrimaryGroup(p);
+
+		String format;
+
+		if (perms == null)
+			format = PlaceholderChat.getInstance().getDefaultFormat();
+		else
+			format = formats.get(perms);
+
+		if (!formats.keySet().contains(perms))
+			format = PlaceholderChat.getInstance().getDefaultFormat();
+		
+		return format;
+	}
+	
+	private void sendChatMessage(AsyncPlayerChatEvent e) {
+	
 		MiniMessage mm = MiniMessage.miniMessage();
 
-		Component adventureComponent = mm.deserialize(legacyToMinimessage(
-				e.getFormat().replaceFirst("%s", "<hover:show_text:'" + placeholders(e.getPlayer(), PlaceholderChat.getInstance().getMainConfig().getRawString("user-hover-text")) + "'>" + e.getPlayer().getDisplayName() + "</hover>")));
-		
-		Component chat;
+		String format = e.getFormat();
+
+		if (PlaceholderChat.getInstance().isAdvancedMode())
+			if (getAdvancedFormat(e.getPlayer()) == null)
+				format = format.replaceFirst("%s", "<hover:show_text:'" + placeholders(e.getPlayer(), PlaceholderChat.getInstance().getSimpleUserHoverText()) + "'>" + e.getPlayer().getDisplayName() + "</hover>");
+			else
+				format = format.replaceFirst("%s", "<hover:show_text:'" + placeholders(e.getPlayer(), getAdvancedFormat(e.getPlayer()).getUserHoverText() + "'>" + e.getPlayer().getDisplayName() + "</hover>"));
+		else
+			format = format.replaceFirst("%s", "<hover:show_text:'" + placeholders(e.getPlayer(), PlaceholderChat.getInstance().getSimpleUserHoverText()) + "'>" + e.getPlayer().getDisplayName() + "</hover>");
+
+		String chat;
 		
 		if (e.getPlayer().hasPermission("placeholderchat.colorchat")) 
-			chat = mm.deserialize(legacyToMinimessage(e.getMessage()));
+			chat = e.getMessage();
 		else 
-			chat = Component.text(e.getMessage());
+			chat = ((TextComponent) mm.deserialize(legacyToMinimessage(e.getMessage()))).content();
 		
-		adventureComponent = adventureComponent.replaceText(b -> {
-			b.matchLiteral("%s");
-			b.once();
-			b.replacement(c -> c.content("").append(chat));
-		});
+		format = format.replaceFirst("%s", chat);
+		
+		System.out.println(format);
 		
 		for (Player p : e.getRecipients()) {
-			PlaceholderChat.getInstance().getAdventure().player(p).sendMessage(adventureComponent);
+			PlaceholderChat.getInstance().getAdventure().player(p).sendMessage(mm.deserialize(legacyToMinimessage(format)));
 		}
 
 		Bukkit.getLogger().info(e.getPlayer().getName() + " > " + e.getMessage());

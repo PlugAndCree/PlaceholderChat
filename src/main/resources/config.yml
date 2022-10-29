@@ -1,14 +1,50 @@
 default-format: "&b%player% &8>> &7%message%"
 
+advanced-mode: false
+
 chat-format:
     user: "[%player_ping%] %prefix%%player%%suffix% >> %message%"
-    admin: "&c[ADMIN] &7%prefix%%player%%suffix% >> &4%message%"
-    
-user-hover-text: |-
-    &cName: &7%player_name% 
-    &7Coordinates:
-    &c  • X: &7%player_x%
-    &c  • Y: &7%player_y%
-    &c  • Z: &7%player_z%
-    &r
-    &cRanks: &7%vault_ranks%
+    admin: "&l{&4,&c}ADMIN&r &f%player% &8» &4%message%"
+ 
+# Install papi packages before uncommenting this (/papi ecloud download [...])
+# /papi ecloud download Player
+# /papi ecloud download Vault
+user-hover-text: ""
+#user-hover-text: |-
+#    &cName: &7%player_name% 
+#    &7Coordinates:
+#    &c  • X: &7%player_x%
+#    &c  • Y: &7%player_y%
+#    &c  • Z: &7%player_z%
+#    &r
+#    &cRanks: &7%vault_ranks%
+
+
+# Remember to install papi packages #
+# /papi ecloud download Player
+# /papi ecloud download Vault
+advanced:
+    rich-user:
+        condition: "'%vault_rank%' == 'user' && %vault_eco_balance% > 200"
+        priority: 10 # Higher values override, default 0
+        chat-format: "&7[%player_ping%] &8[{&#5e4fa2,&#f79459,&c}SUPER RICH&8] %prefix%%player%%suffix% &8» {&#5e4fa2,&#f79459,&c}%message%"
+        # Default empty string
+        user-hover-text: |-
+            &cName: &7%player_name% 
+            &r
+            &cRanks: &7%vault_ranks%
+            &r
+            {&#5e4fa2,&#f79459,&c}SUPER RICH%
+    user:
+        condition: "'%vault_rank%' == 'user'"
+        priority: 5 # Higher values override, default 0
+        chat-format: "&7[%player_ping%] %prefix%%player%%suffix% &8» &f%message%"
+        # Default empty string
+        user-hover-text: |-
+            &cName: &7%player_name% 
+            &7Coordinates:
+            &c  • X: &7%player_x%
+            &c  • Y: &7%player_y%
+            &c  • Z: &7%player_z%
+            &r
+            &cRanks: &7%vault_ranks%
