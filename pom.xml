@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.plugandcree</groupId>
 	<artifactId>placeholderchat</artifactId>
-	<version>3.0.2</version>
+	<version>4.0.0-SNAPSHOT</version>
 	<name>PlaceholderChat</name>
 	<repositories>
 		<repository>
@@ -12,7 +12,7 @@
 		</repository>
 		<repository>
 			<id>tecno-repo</id>
-			<url>https://repo.mrtecno.tk/repository/public-maven/</url>
+			<url>https://repo.mrtecno.dev/repository/public-maven/</url>
 		</repository>
 		<repository>
 			<id>jitpack.io</id>
@@ -96,17 +96,17 @@
 		</resources>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.8.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>17</release>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.1</version>
+				<version>3.3.0-SNAPSHOT</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
